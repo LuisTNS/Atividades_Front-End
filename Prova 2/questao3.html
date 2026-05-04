@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Grupos e Fatos</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      font-family: 'Poppins', sans-serif;
+      color: #ffffff;
+      padding: 40px 20px;
+    }
+
+    .cabecalho {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 28px;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      margin-bottom: 40px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+
+    .cabecalho h1 {
+      font-size: 2.2rem;
+      color: #00e676;
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.6);
+    }
+
+    .container-grupos {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .cartao-grupo {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      border-radius: 18px;
+      padding: 28px;
+      width: 280px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      transition: 0.3s;
+    }
+
+    .cartao-grupo:hover {
+      transform: translateY(-8px) scale(1.02);
+    }
+
+    .cartao-grupo h2 {
+      color: #00e676;
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+
+    .cartao-grupo h3 {
+      color: #b2ff59;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .lista-selecoes {
+      list-style: none;
+      margin-bottom: 20px;
+    }
+
+    .lista-selecoes li {
+      background: rgba(0, 230, 118, 0.15);
+      border: 1px solid rgba(0, 230, 118, 0.4);
+      color: #eaffea;
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      transition: 0.2s;
+    }
+
+    .lista-selecoes li:hover {
+      background: rgba(0, 230, 118, 0.4);
+    }
+
+    .saiba-mais {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .saiba-mais summary {
+      color: #00e676;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: 0.3s;
+    }
+
+    .saiba-mais summary:hover {
+      color: #ffffff;
+    }
+
+    .saiba-mais p {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #d0d0d0;
+      line-height: 1.6;
+    }
+
+    .container-botao {
+      display: flex;
+      justify-content: center;
+      margin-top: 40px;
+    }
+
+    .btn-proximo {
+      background: linear-gradient(45deg, #00e676, #00c853);
+      color: #000;
+      border: none;
+      border-radius: 30px;
+      padding: 14px 36px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn-proximo:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px #00e676;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="cabecalho">
+    <h1>⚽ Grupos e Fatos</h1>
+  </div>
+
+  <div class="container-grupos" id="container-grupos">
+
+    <div id="grupo-1" class="cartao-grupo">
+      <h2 id="titulo-1"></h2>
+      <h3>Seleções</h3>
+      <ul class="lista-selecoes" id="lista-1"></ul>
+      <details class="saiba-mais" id="details-1">
+        <summary>Saiba Mais</summary>
+        <p id="fato-1"></p>
+      </details>
+    </div>
+
+    <div id="grupo-2" class="cartao-grupo">
+      <h2 id="titulo-2"></h2>
+      <h3>Seleções</h3>
+      <ul class="lista-selecoes" id="lista-2"></ul>
+      <details class="saiba-mais" id="details-2">
+        <summary>Saiba Mais</summary>
+        <p id="fato-2"></p>
+      </details>
+    </div>
+
+    <div id="grupo-3" class="cartao-grupo">
+      <h2 id="titulo-3"></h2>
+      <h3>Seleções</h3>
+      <ul class="lista-selecoes" id="lista-3"></ul>
+      <details class="saiba-mais" id="details-3">
+        <summary>Saiba Mais</summary>
+        <p id="fato-3"></p>
+      </details>
+    </div>
+
+  </div>
+
+  <div class="container-botao">
+    <button class="btn-proximo" onclick="alternarGrupos()">Próximo</button>
+  </div>
+
+  <script>
+    var conjuntos = [
+      [
+        {
+          titulo: "🅰️ Grupo A",
+          selecoes: ["México", "África do Sul", "Coreia do Sul", "República Tcheca"],
+          fato: "O jogo de abertura será México x África do Sul."
+        },
+        {
+          titulo: "🅱️ Grupo B",
+          selecoes: ["Canadá", "Suíça", "Catar", "Bósnia"],
+          fato: "O Canadá joga em casa."
+        },
+        {
+          titulo: "🅲 Grupo C",
+          selecoes: ["Brasil", "Marrocos", "Haiti", "Escócia"],
+          fato: "Brasil nunca perdeu para a Escócia."
+        }
+      ],
+      [
+        {
+          titulo: "🅳 Grupo D",
+          selecoes: ["Estados Unidos", "Paraguai", "Austrália", "Turquia"],
+          fato: "EUA jogam em casa."
+        },
+        {
+          titulo: "🅴 Grupo E",
+          selecoes: ["Alemanha", "Equador", "Costa do Marfim", "Curaçao"],
+          fato: "Alemanha domina grupos."
+        },
+        {
+          titulo: "🅵 Grupo F",
+          selecoes: ["Holanda", "Japão", "Tunísia", "Suécia"],
+          fato: "Holanda e Japão já se enfrentaram."
+        }
+      ]
+    ];
+
+    var conjuntoAtual = 0;
+
+    function preencherCartoes(indice) {
+      var grupos = conjuntos[indice];
+
+      for (var i = 0; i < grupos.length; i++) {
+        var n = i + 1;
+
+        document.getElementById("titulo-" + n).textContent = grupos[i].titulo;
+
+        var lista = document.getElementById("lista-" + n);
+        lista.innerHTML = "";
+
+        for (var j = 0; j < grupos[i].selecoes.length; j++) {
+          var li = document.createElement("li");
+          li.textContent = grupos[i].selecoes[j];
+          lista.appendChild(li);
+        }
+
+        document.getElementById("fato-" + n).textContent = grupos[i].fato;
+        document.getElementById("details-" + n).removeAttribute("open");
+      }
+    }
+
+    function alternarGrupos() {
+      conjuntoAtual = conjuntoAtual === 0 ? 1 : 0;
+      preencherCartoes(conjuntoAtual);
+    }
+
+    preencherCartoes(conjuntoAtual);
+  </script>
+
+</body>
+</html>
