@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Infinity Bank</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .cabecalho {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .cabecalho small {
+      font-size: 12px;
+      color: #888;
+    }
+
+    .cabecalho h1 {
+      font-size: 22px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-top: 4px;
+    }
+
+    .campo {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 6px;
+    }
+
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      background-color: #fff;
+      transition: border-color 0.2s;
+    }
+
+    input[type="number"]:focus,
+    select:focus {
+      border-color: #4a90e2;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 4px;
+      padding: 11px;
+      font-size: 15px;
+      font-weight: 600;
+      background-color: #4a90e2;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #357abd;
+    }
+
+    button:active {
+      background-color: #2a6099;
+    }
+
+    #resultado {
+      display: none;
+      margin-top: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid #4a90e2;
+      overflow: hidden;
+    }
+
+    .resultado-titulo {
+      background-color: #4a90e2;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 14px;
+    }
+
+    .resultado-linha {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 14px;
+      font-size: 14px;
+      color: #333;
+      border-bottom: 1px solid #eee;
+    }
+
+    .resultado-linha:last-child {
+      border-bottom: none;
+    }
+
+    .resultado-linha span:last-child {
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .resultado-linha.destaque {
+      background-color: #f0f6ff;
+    }
+
+    .resultado-linha.destaque span:last-child {
+      color: #1a4f9c;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+
+    <div class="cabecalho">
+      <small>Laboratório FrontEnd · Exercício 04</small>
+      <h1> Infinity Bank</h1>
+    </div>
+
+    <div class="campo">
+      <label for="bandeira">Bandeira do cartão</label>
+      <select id="bandeira">
+        <option value="">Selecione a bandeira</option>
+        <option value="visa">Visa (2%)</option>
+        <option value="master">Mastercard (1,85%)</option>
+        <option value="elo">Elo (3%)</option>
+      </select>
+    </div>
+
+    <div class="campo">
+      <label for="valor">Valor da venda (R$)</label>
+      <input type="number" id="valor" placeholder="0,00" min="0" step="0.01" />
+    </div>
+
+    <div class="campo">
+      <label for="parcelas">Número de parcelas</label>
+      <select id="parcelas">
+        <option value="1">1x (à vista)</option>
+        <option value="2">2x</option>
+        <option value="3">3x</option>
+        <option value="4">4x</option>
+        <option value="5">5x</option>
+        <option value="6">6x</option>
+        <option value="7">7x</option>
+        <option value="8">8x</option>
+        <option value="9">9x</option>
+        <option value="10">10x</option>
+        <option value="11">11x</option>
+        <option value="12">12x</option>
+      </select>
+    </div>
+
+    <button id="btn-calcular">Simular</button>
+
+    <div id="resultado">
+      <div class="resultado-titulo">Resumo da transação</div>
+      <div class="resultado-linha">
+        <span>Valor da venda</span>
+        <span id="res-venda"></span>
+      </div>
+      <div class="resultado-linha">
+        <span>Taxa da bandeira</span>
+        <span id="res-taxa"></span>
+      </div>
+      <div class="resultado-linha">
+        <span>Juros (0,35% a.m.)</span>
+        <span id="res-juros"></span>
+      </div>
+      <div class="resultado-linha">
+        <span>Taxa mensal (R$ 12,50/mês)</span>
+        <span id="res-mensal"></span>
+      </div>
+      <div class="resultado-linha">
+        <span>Valor total</span>
+        <span id="res-total"></span>
+      </div>
+      <div class="resultado-linha destaque">
+        <span>Valor de cada parcela</span>
+        <span id="res-parcela"></span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    document.getElementById('btn-calcular').addEventListener('click', function () {
+      const bandeira = document.getElementById('bandeira').value;
+      const valor    = Number(document.getElementById('valor').value);
+      const parcelas = Number(document.getElementById('parcelas').value);
+
+      const resultado = document.getElementById('resultado');
+
+      if (bandeira === '' || document.getElementById('valor').value === '') {
+        resultado.style.display = 'none';
+        alert('Preencha todos os campos.');
+        return;
+      }
+
+      let taxaBandeira = 0;
+
+      switch (bandeira) {
+        case 'visa':
+          taxaBandeira = 0.02;
+          break;
+        case 'master':
+          taxaBandeira = 0.0185;
+          break;
+        case 'elo':
+          taxaBandeira = 0.03;
+          break;
+      }
+
+      const valorTaxa    = valor * taxaBandeira;
+      const valorJuros   = valor * (0.0035 * parcelas);
+      const valorMensal  = 12.50 * parcelas;
+      const valorTotal   = valor + valorTaxa + valorJuros + valorMensal;
+      const valorParcela = valorTotal / parcelas;
+
+      const fmt = (n) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+      document.getElementById('res-venda').textContent   = fmt(valor);
+      document.getElementById('res-taxa').textContent    = fmt(valorTaxa);
+      document.getElementById('res-juros').textContent   = fmt(valorJuros);
+      document.getElementById('res-mensal').textContent  = fmt(valorMensal);
+      document.getElementById('res-total').textContent   = fmt(valorTotal);
+      document.getElementById('res-parcela').textContent = `${parcelas}x de ${fmt(valorParcela)}`;
+
+      resultado.style.display = 'block';
+    });
+  </script>
+
+</body>
+</html>

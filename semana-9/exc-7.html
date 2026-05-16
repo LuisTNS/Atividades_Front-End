@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Infinity Bank - Card Guard</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .cabecalho {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .cabecalho small { font-size: 12px; color: #888; }
+
+    .cabecalho h1 {
+      font-size: 22px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-top: 4px;
+    }
+
+    .campo { margin-bottom: 1rem; }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 18px;
+      letter-spacing: 0.15em;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s;
+      font-family: monospace;
+    }
+
+    input[type="text"]:focus { border-color: #4a90e2; }
+
+    button {
+      width: 100%;
+      margin-top: 4px;
+      padding: 11px;
+      font-size: 15px;
+      font-weight: 600;
+      background-color: #4a90e2;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover  { background-color: #357abd; }
+    button:active { background-color: #2a6099; }
+
+    #painel {
+      display: none;
+      margin-top: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      overflow: hidden;
+    }
+
+    .painel-titulo {
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 14px;
+      background-color: #4a90e2;
+      color: #fff;
+    }
+
+    .painel-linha {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      font-size: 14px;
+      color: #333;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .painel-linha:last-child { border-bottom: none; }
+    .painel-linha .rotulo { color: #777; font-size: 13px; }
+    .painel-linha .valor  { font-weight: 600; color: #1a1a1a; text-align: right; }
+
+    .badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .badge.valido   { background-color: #e6f4ea; color: #2e7d32; }
+    .badge.invalido { background-color: #fdecea; color: #c62828; }
+
+    .iin-grid {
+      display: none;
+      margin-top: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      overflow: hidden;
+    }
+
+    .iin-titulo {
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 14px;
+      background-color: #f8f9fa;
+      color: #555;
+      border-bottom: 1px solid #eee;
+    }
+
+    .iin-linha {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 14px;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 13px;
+    }
+
+    .iin-linha:last-child { border-bottom: none; }
+
+    .iin-digito {
+      background-color: #e8f0fe;
+      color: #1a4f9c;
+      font-family: monospace;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+      min-width: 52px;
+      text-align: center;
+    }
+
+    .iin-desc { color: #555; line-height: 1.5; }
+
+    .iin-desc strong {
+      display: block;
+      color: #1a1a1a;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+
+    <div class="cabecalho">
+      <small>Laboratório FrontEnd · Exercício 07</small>
+      <h1> Card Guard</h1>
+    </div>
+
+    <div class="campo">
+      <label for="numero-cartao">Número do cartão (até 16 dígitos)</label>
+      <input type="text" id="numero-cartao" placeholder="0000 0000 0000 0000" maxlength="19" />
+    </div>
+
+    <button id="btn-analisar">Analisar Cartão</button>
+
+    <div id="painel">
+      <div class="painel-titulo">Painel de Informações</div>
+      <div class="painel-linha">
+        <span class="rotulo">Status</span>
+        <span class="valor"><span class="badge" id="info-status"></span></span>
+      </div>
+      <div class="painel-linha">
+        <span class="rotulo">Bandeira</span>
+        <span class="valor" id="info-bandeira"></span>
+      </div>
+      <div class="painel-linha">
+        <span class="rotulo">Categoria de Setor</span>
+        <span class="valor" id="info-setor"></span>
+      </div>
+      <div class="painel-linha">
+        <span class="rotulo">Banco Emissor</span>
+        <span class="valor" id="info-banco"></span>
+      </div>
+    </div>
+
+    <div class="iin-grid" id="iin-grid">
+      <div class="iin-titulo">Composição do IIN (8 primeiros dígitos)</div>
+      <div class="iin-linha">
+        <span class="iin-digito" id="iin-d1"></span>
+        <div class="iin-desc">
+          <strong>Código do Setor Industrial</strong>
+          Roteamento inicial na rede de adquirência
+        </div>
+      </div>
+      <div class="iin-linha">
+        <span class="iin-digito" id="iin-d2a5"></span>
+        <div class="iin-desc">
+          <strong>Código Geográfico e do Emissor</strong>
+          Identifica o país de origem e o banco detentor do lote
+        </div>
+      </div>
+      <div class="iin-linha">
+        <span class="iin-digito" id="iin-d6a8"></span>
+        <div class="iin-desc">
+          <strong>Código da Carteira de Produtos</strong>
+          Determina se o produto é Pré-pago, Débito ou Crédito
+        </div>
+      </div>
+      <div class="iin-linha">
+        <span class="iin-digito" id="iin-d9n"></span>
+        <div class="iin-desc">
+          <strong>Fora do IIN (Conta + Verificação)</strong>
+          Identificação única do cliente e validação de Luhn
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const inputCartao = document.getElementById('numero-cartao');
+
+    inputCartao.addEventListener('input', function () {
+      let v = this.value.replace(/\D/g, '');
+      v = v.match(/.{1,4}/g)?.join(' ') || v;
+      this.value = v;
+      document.getElementById('painel').style.display    = 'none';
+      document.getElementById('iin-grid').style.display  = 'none';
+    });
+
+    inputCartao.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') analisar();
+    });
+
+    function luhn(numero) {
+      const digits = numero.split('').map(Number).reverse();
+      let soma = 0;
+      for (let i = 0; i < digits.length; i++) {
+        let d = digits[i];
+        if (i % 2 === 1) {
+          d *= 2;
+          if (d > 9) d -= 9;
+        }
+        soma += d;
+      }
+      return soma % 10 === 0;
+    }
+
+    function identificarBandeira(numero) {
+      if (/^4/.test(numero))                                            return 'Visa';
+      if (/^5[1-5]/.test(numero))                                       return 'Mastercard';
+      if (/^3[47]/.test(numero))                                        return 'American Express';
+      if (/^6(?:011|5)/.test(numero))                                   return 'Discover';
+      if (/^(?:636368|438935|504175|451416|636297)/.test(numero))       return 'Elo';
+      if (/^(?:3088|3096|3112|3158|3337|3528)/.test(numero))           return 'JCB';
+      return 'Desconhecida';
+    }
+
+    function identificarSetor(primeiroDigito) {
+      const setores = {
+        '1': 'Aéreo e Transporte',
+        '2': 'Aéreo e Transporte',
+        '3': 'Turismo e Entretenimento',
+        '4': 'Bancário e Financeiro',
+        '5': 'Bancário e Financeiro',
+        '6': 'Comercial e Merchandising',
+        '7': 'Petróleo e Derivados',
+        '8': 'Telecomunicações',
+        '9': 'Governo e Nacional'
+      };
+      return setores[primeiroDigito] || 'Não identificado';
+    }
+
+    function identificarBanco(numero) {
+      const prefixos = {
+        '4111': 'Banco Teste (Visa)',
+        '4000': 'Bank of America',
+        '4012': 'Chase Bank',
+        '5105': 'Mastercard Test Bank',
+        '5500': 'Citibank',
+        '3782': 'American Express',
+        '6011': 'Discover Bank',
+        '636':  'Elo / Banco do Brasil',
+        '504':  'Elo / Caixa Econômica',
+      };
+      for (const prefixo in prefixos) {
+        if (numero.startsWith(prefixo)) return prefixos[prefixo];
+      }
+      return 'Emissor não mapeado';
+    }
+
+    function analisar() {
+      const raw = inputCartao.value.replace(/\D/g, '');
+      const painel  = document.getElementById('painel');
+      const iinGrid = document.getElementById('iin-grid');
+
+      if (raw.length < 13 || raw.length > 16) {
+        painel.style.display  = 'none';
+        iinGrid.style.display = 'none';
+        alert('O número deve ter entre 13 e 16 dígitos.');
+        return;
+      }
+
+      const valido   = luhn(raw);
+      const bandeira = identificarBandeira(raw);
+      const setor    = identificarSetor(raw[0]);
+      const banco    = identificarBanco(raw);
+
+      const badge = document.getElementById('info-status');
+      badge.textContent = valido ? 'Válido' : 'Inválido';
+      badge.className   = 'badge ' + (valido ? 'valido' : 'invalido');
+
+      document.getElementById('info-bandeira').textContent = bandeira;
+      document.getElementById('info-setor').textContent    = setor;
+      document.getElementById('info-banco').textContent    = banco;
+
+      document.getElementById('iin-d1').textContent   = raw[0];
+      document.getElementById('iin-d2a5').textContent = raw.slice(1, 5);
+      document.getElementById('iin-d6a8').textContent = raw.slice(5, 8);
+      document.getElementById('iin-d9n').textContent  = raw.slice(8);
+
+      painel.style.display  = 'block';
+      iinGrid.style.display = 'block';
+    }
+
+    document.getElementById('btn-analisar').addEventListener('click', analisar);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Infinity Bank - Crédito para Eventos</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .cabecalho {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .cabecalho small {
+      font-size: 12px;
+      color: #888;
+    }
+
+    .cabecalho h1 {
+      font-size: 22px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-top: 4px;
+    }
+
+    .campo {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 6px;
+    }
+
+    select,
+    input[type="number"] {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      background-color: #fff;
+      transition: border-color 0.2s;
+    }
+
+    select:focus,
+    input[type="number"]:focus {
+      border-color: #4a90e2;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 4px;
+      padding: 11px;
+      font-size: 15px;
+      font-weight: 600;
+      background-color: #4a90e2;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #357abd;
+    }
+
+    button:active {
+      background-color: #2a6099;
+    }
+
+    #resultado {
+      display: none;
+      margin-top: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid #4a90e2;
+      overflow: hidden;
+    }
+
+    .resultado-titulo {
+      background-color: #4a90e2;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 14px;
+    }
+
+    .resultado-linha {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      font-size: 14px;
+      color: #333;
+      border-bottom: 1px solid #eee;
+    }
+
+    .resultado-linha:last-child {
+      border-bottom: none;
+    }
+
+    .resultado-linha span:last-child {
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .resultado-linha.desconto span:last-child {
+      color: #2e7d32;
+    }
+
+    .resultado-linha.total {
+      background-color: #f0f6ff;
+    }
+
+    .resultado-linha.total span:first-child {
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .resultado-linha.total span:last-child {
+      color: #1a4f9c;
+      font-size: 16px;
+    }
+
+    .badge-desconto {
+      display: none;
+      font-size: 11px;
+      font-weight: 600;
+      background-color: #e6f4ea;
+      color: #2e7d32;
+      border-radius: 4px;
+      padding: 2px 7px;
+      margin-left: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+
+    <div class="cabecalho">
+      <small>Laboratório FrontEnd · Exercício 06</small>
+      <h1> Crédito para Eventos</h1>
+    </div>
+
+    <div class="campo">
+      <label for="pacote">Pacote do evento</label>
+      <select id="pacote">
+        <option value="">Selecione um pacote</option>
+        <option value="50">Standard — R$ 50,00 por pessoa</option>
+        <option value="80">Premium — R$ 80,00 por pessoa</option>
+        <option value="120">Infinity Deluxe — R$ 120,00 por pessoa</option>
+      </select>
+    </div>
+
+    <div class="campo">
+      <label for="pessoas">Quantidade de pessoas</label>
+      <input type="number" id="pessoas" placeholder="Ex: 80" min="1" step="1" />
+    </div>
+
+    <button id="btn-calcular">Calcular Orçamento</button>
+
+    <div id="resultado">
+      <div class="resultado-titulo">Resumo do orçamento</div>
+      <div class="resultado-linha">
+        <span>Custo bruto</span>
+        <span id="res-bruto"></span>
+      </div>
+      <div class="resultado-linha">
+        <span>Taxa de serviço (10%)</span>
+        <span id="res-taxa"></span>
+      </div>
+      <div class="resultado-linha desconto" id="linha-desconto">
+        <span>Desconto fidelidade (5%) <span class="badge-desconto" id="badge">+100 pessoas</span></span>
+        <span id="res-desconto"></span>
+      </div>
+      <div class="resultado-linha total">
+        <span>Total final</span>
+        <span id="res-total"></span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    document.getElementById('btn-calcular').addEventListener('click', function () {
+      const pacote  = document.getElementById('pacote').value;
+      const pessoas = Number(document.getElementById('pessoas').value);
+
+      const resultado     = document.getElementById('resultado');
+      const linhaDesconto = document.getElementById('linha-desconto');
+      const badge         = document.getElementById('badge');
+
+      if (pacote === '' || document.getElementById('pessoas').value === '' || pessoas < 1) {
+        resultado.style.display = 'none';
+        alert('Preencha todos os campos corretamente.');
+        return;
+      }
+
+      const valorPacote = Number(pacote);
+      const custoBruto  = valorPacote * pessoas;
+      const taxaServico = custoBruto * 0.10;
+      const subtotal    = custoBruto + taxaServico;
+
+      let desconto    = 0;
+      let temDesconto = pessoas > 100;
+
+      if (temDesconto) {
+        desconto = subtotal * 0.05;
+      }
+
+      const totalFinal = subtotal - desconto;
+
+      const fmt = (n) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+      document.getElementById('res-bruto').textContent    = fmt(custoBruto);
+      document.getElementById('res-taxa').textContent     = fmt(taxaServico);
+      document.getElementById('res-desconto').textContent = temDesconto ? `- ${fmt(desconto)}` : '—';
+      document.getElementById('res-total').textContent    = fmt(totalFinal);
+
+      linhaDesconto.style.opacity = temDesconto ? '1' : '0.4';
+      badge.style.display         = temDesconto ? 'inline' : 'none';
+
+      resultado.style.display = 'block';
+    });
+  </script>
+
+</body>
+</html>
