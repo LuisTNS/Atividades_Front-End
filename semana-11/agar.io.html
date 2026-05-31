@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agar.io Clone - Bots & Arena Limitada</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- TELA DO MENU INICIAL -->
+    <div id="menu-inicial" class="tela-menu">
+        <div class="conteudo-menu">
+            <h1>AGAR.IO</h1>
+            <input type="text" id="nome-jogador" placeholder="Seu Apelido" value="Célula">
+            <button id="btn-iniciar">Iniciar Jogo</button>
+        </div>
+    </div>
+
+    <!-- PAINEL DE INFORMAÇÕES (HUD) -->
+    <div id="hud" class="hud escondido">
+        <div class="placar">Massa: <span id="massa-score">20</span></div>
+        <button id="btn-sair">Sair</button>
+    </div>
+
+    <!-- QUADRO DE LÍDERES (LEADERBOARD) -->
+    <div id="leaderboard" class="leaderboard escondido">
+        <h3>Líderes</h3>
+        <ol id="lista-lideres"></ol>
+    </div>
+
+    <!-- CANVAS DO JOGO -->
+    <canvas id="canvas-jogo"></canvas>
+
+    <script src="game.js"></script>
+</body>
+</html>
